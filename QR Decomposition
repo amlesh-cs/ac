@@ -1,0 +1,106 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled4.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyPrY3i8aKiz3gIe4rY9B6pd",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/amlesh-dev/ac/blob/master/QR%20Decomposition\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xAwyFgGll-2m",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 218
+        },
+        "outputId": "7d7d7c7c-0680-4899-c292-16093b2fca36"
+      },
+      "source": [
+        "import numpy as np\n",
+        " \n",
+        "def qr(A):\n",
+        "    m, n = A.shape\n",
+        "    Q = np.eye(m)\n",
+        "    for i in range(n - (m == n)):\n",
+        "        H = np.eye(m)\n",
+        "        H[i:, i:] = make_householder(A[i:, i])\n",
+        "        Q = np.dot(Q, H)\n",
+        "        A = np.dot(H, A)\n",
+        "    return Q, A\n",
+        " \n",
+        "def make_householder(a):\n",
+        "    v = a / (a[0] + np.copysign(np.linalg.norm(a), a[0]))\n",
+        "    v[0] = 1\n",
+        "    H = np.eye(a.shape[0])\n",
+        "    H -= (2 / np.dot(v, v)) * np.dot(v[:, None], v[None, :])\n",
+        "    return H\n",
+        " \n",
+        "\n",
+        "a = np.array(((\n",
+        "    (12, -51,   4),\n",
+        "    ( 6, 167, -68),\n",
+        "    (-4,  24, -41),\n",
+        ")))\n",
+        " \n",
+        "q, r = qr(a)\n",
+        "print(\"Array is \\n \",a)\n",
+        "print('q:\\n', q.round(6))\n",
+        "print('r:\\n', r.round(6))\n",
+        " \n",
+        "\n",
+        "def polyfit(x, y, n):\n",
+        "    return lsqr(x[:, None]**np.arange(n + 1), y.T)\n",
+        " \n",
+        "def lsqr(a, b):\n",
+        "    q, r = qr(a)\n",
+        "    _, n = r.shape\n",
+        "    return np.linalg.solve(r[:n, :], np.dot(q.T, b)[:n])\n",
+        " \n",
+        "x = np.array((0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10))\n",
+        "y = np.array((1, 6, 17, 34, 57, 86, 121, 162, 209, 262, 321))\n",
+        " "
+      ],
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Array is \n",
+            "  [[ 12 -51   4]\n",
+            " [  6 167 -68]\n",
+            " [ -4  24 -41]]\n",
+            "q:\n",
+            " [[-0.857143  0.394286  0.331429]\n",
+            " [-0.428571 -0.902857 -0.034286]\n",
+            " [ 0.285714 -0.171429  0.942857]]\n",
+            "r:\n",
+            " [[ -14.  -21.   14.]\n",
+            " [   0. -175.   70.]\n",
+            " [   0.   -0.  -35.]]\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    }
+  ]
+}
