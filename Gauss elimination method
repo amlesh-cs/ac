@@ -1,0 +1,95 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled3.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyMy+hRJbkrzCj0CdfD+xKTq",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/amlesh-dev/ac/blob/master/Gauss%20elimination%20method\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "1Tjc5jCwdkZC",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 134
+        },
+        "outputId": "53c95827-769a-4535-bf70-8e6fc8a92faa"
+      },
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "def gssjrdn(a,b):\n",
+        "  a=np.array(a,float)\n",
+        "  b=np.array(b,float)\n",
+        "  n=len(b)\n",
+        "\n",
+        "  for k in range(n):\n",
+        "    if np.fabs(a[k,k])<1.0e-12:\n",
+        "      for i in range(k+1,n):\n",
+        "        if np.fabs(a[i,k]) > np.fabs(a[k,k]):\n",
+        "          for j in range(k,n):\n",
+        "            a[k,j],a[i,j]=a[i,j],a[k,j]\n",
+        "          b[k],b[i]=b[i],b[k]\n",
+        "          break\n",
+        "\n",
+        "    pivot=a[k,k]\n",
+        "    for j in range(k,n):\n",
+        "      a[k,j] /= pivot\n",
+        "    b[k] /= pivot\n",
+        "\n",
+        "    for i in range(n):\n",
+        "      if i == k or a[i,k] == 0: continue\n",
+        "      factor=a[i,k]\n",
+        "      for j in range(k,n):\n",
+        "        a[i,j] -= factor * a[k,j]\n",
+        "        b[i] -= factor * b[k]\n",
+        "    return b,a\n",
+        "\n",
+        "a=[[0,2,0,1],[2,2,3,2],[4,-3,0,1],[6,1,-6,-5]]\n",
+        "b=[0,-2,-7,6]\n",
+        "\n",
+        "X,A=gssjrdn(a,b)\n",
+        "print(\"The solution\")\n",
+        "print(X)\n",
+        "print(\"The transformed [a]\")\n",
+        "print(A)\n"
+      ],
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "The solution\n",
+            "[-1.  0.  9. 30.]\n",
+            "The transformed [a]\n",
+            "[[  1.    1.    1.5   1. ]\n",
+            " [  0.    2.    0.    1. ]\n",
+            " [  0.   -7.   -6.   -3. ]\n",
+            " [  0.   -5.  -15.  -11. ]]\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    }
+  ]
+}
